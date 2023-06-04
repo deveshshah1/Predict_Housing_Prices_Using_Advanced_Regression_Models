@@ -3,7 +3,7 @@ import numpy as np
 from models.model_helper_fxns import *
 
 
-def xgboost(df_train, df_test, features, target, feature_grouping='All Features'):
+def run_xgboost(df_train, df_test, features, target, feature_grouping='All Features'):
     # Hyper-parameter Search
     dtrain_reg = xgb.DMatrix(df_train[features], df_train[target])
     params = {'objective': 'reg:squarederror', 'tree_method': 'hist'}
@@ -14,8 +14,8 @@ def xgboost(df_train, df_test, features, target, feature_grouping='All Features'
     xgb_model = xgb.train(params=params, dtrain=dtrain_reg, num_boost_round=n_estimators)
 
     # Calculating Metrics (MSE and Percent Error)
-    train_metrics = calc_metrics(xgb_model, df_train, features, target, xgb=True)
-    test_metrics = calc_metrics(xgb_model, df_test, features, target, xgb=True)
+    train_metrics = calc_metrics(xgb_model, df_train, features, target, use_xgb=True)
+    test_metrics = calc_metrics(xgb_model, df_test, features, target, use_xgb=True)
 
     # Plot observed vs. predicted cycle life
     title = f'XGBoost [n_estimators={n_estimators}] \n Feature Set: {feature_grouping}'

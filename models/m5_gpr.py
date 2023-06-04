@@ -5,7 +5,7 @@ import numpy as np
 from models.model_helper_fxns import *
 
 
-def gpr(df_train, df_test, features, target, feature_grouping='All Features'):
+def run_gpr(df_train, df_test, features, target, feature_grouping='All Features'):
     # Hyper-parameter Search
     kernel_options = []
     for i in np.logspace(0, 10, 10):

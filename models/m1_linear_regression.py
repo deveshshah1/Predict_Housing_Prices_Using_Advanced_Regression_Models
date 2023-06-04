@@ -3,7 +3,7 @@ import numpy as np
 from models.model_helper_fxns import *
 
 
-def linear_regression(df_train, df_test, features, target, feature_grouping='All Features'):
+def run_linear_regression(df_train, df_test, features, target, feature_grouping='All Features'):
     # Hyper-parameter Search
     grid = dict()
     grid['alpha'] = [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 0, 0.1, 1.0, 10.0, 100.0]

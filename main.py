@@ -1,9 +1,9 @@
 from dataset.dataset_preprocessing import *
-from models.linear_regression import *
-from models.svr import *
-from models.random_forest import *
-from models.xgboost import *
-from models.gpr import *
+from models.m1_linear_regression import *
+from models.m2_svr import *
+from models.m3_random_forest import *
+from models.m4_xgboost import *
+from models.m5_gpr import *
 
 
 def main():
@@ -14,11 +14,11 @@ def main():
 
     # Run Models
     results = {}
-    results['Linear_Regression'] = linear_regression(df_train, df_test, features, target)
-    results['SVR'] = svr(df_train, df_test, features, target)
-    results['Random_Forest'] = random_forest(df_train, df_test, features, target)
-    results['XGBoost'] = xgboost(df_train, df_test, features, target)
-    results['GPR'] = gpr(df_train, df_test, features, target)
+    results['Linear_Regression'] = run_linear_regression(df_train, df_test, features, target)
+    results['SVR'] = run_svr(df_train, df_test, features, target)
+    results['Random_Forest'] = run_random_forest(df_train, df_test, features, target)
+    results['XGBoost'] = run_xgboost(df_train, df_test, features, target)
+    results['GPR'] = run_gpr(df_train, df_test, features, target)
 
     # Print Results
     df_results = pd.DataFrame(results)

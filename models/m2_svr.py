@@ -3,7 +3,7 @@ import numpy as np
 from models.model_helper_fxns import *
 
 
-def svr(df_train, df_test, features, target, feature_grouping='All Features'):
+def run_svr(df_train, df_test, features, target, feature_grouping='All Features'):
     # Hyper-parameter Search
     grid = dict()
     grid['gamma'] = ['scale', 'auto']

@@ -9,8 +9,8 @@ cv_njobs = -1
 cv_scoring = 'neg_root_mean_squared_error'
 
 
-def calc_metrics(model, df, features, target, xgb=False):
-    if xgb:
+def calc_metrics(model, df, features, target, use_xgb=False):
+    if use_xgb:
         dmatrix = xgb.DMatrix(df[features], df[target])
         predictions = model.predict(dmatrix)
     else:

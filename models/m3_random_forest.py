@@ -4,7 +4,7 @@ import numpy as np
 from models.model_helper_fxns import *
 
 
-def random_forest(df_train, df_test, features, target, feature_grouping='All Features'):
+def run_random_forest(df_train, df_test, features, target, feature_grouping='All Features'):
     # Hyper-parameter Search
     grid = dict()
     grid['n_estimators'] = [20, 50, 100, 200, 400]
