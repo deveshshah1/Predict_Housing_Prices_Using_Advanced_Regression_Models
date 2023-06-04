@@ -3,9 +3,10 @@ import numpy as np
 from sklearn import model_selection, preprocessing
 import matplotlib.pyplot as plt
 import seaborn as sns
+import math
 
 
-def preprocess_data(dataset_path='./dataset/boston_housing_prices.csv', process='abs_scaling', random_state=42):
+def preprocess_data(dataset_path, features, target, process='abs_scaling', random_state=42):
     """
     Each record in the database describes a Boston suburb or town. The data was drawn from the Boston Standard
     Metropolitan Statistical Area (SMSA) in 1970. The attributes are defined as follows:
@@ -36,8 +37,6 @@ def preprocess_data(dataset_path='./dataset/boston_housing_prices.csv', process=
 
     # Split into train/test
     df_train, df_test = model_selection.train_test_split(df, test_size=0.2, random_state=random_state)
-    features = ['CRIM', 'ZN', 'INDUS', 'CHAS', 'NOX', 'RM', 'AGE', 'DIS', 'RAD', 'TAX', 'PTRATIO', 'B', 'LSTAT']
-    target = 'MEDV'
 
     # Process the data
     if process == 'abs_scaling':
@@ -64,14 +63,14 @@ def preprocess_data(dataset_path='./dataset/boston_housing_prices.csv', process=
     return df_train, df_test, features, target
 
 
-def dataset_statistics(dataset_path='./dataset/boston_housing_prices.csv'):
+def dataset_statistics(dataset_path, features, target):
     # Load Dataset
     df = pd.read_csv(dataset_path)
 
     # Perform Basic Statistics on Dataset
     dtype = list(df.dtypes)
     num_nulls = list(df.isna().sum())
-    pearson_correlation = list(df.corr()['MEDV'])
+    pearson_correlation = list(df.corr()[target])
     df_statistics = pd.DataFrame([dtype, num_nulls, pearson_correlation])
     df_statistics.columns = df.columns
     df_statistics.index = ['dtype', 'Number_Nulls', 'Pearson_R_Correlation']
@@ -81,4 +80,31 @@ def dataset_statistics(dataset_path='./dataset/boston_housing_prices.csv'):
     # Visualize Correlation Matrix
     corr_mat = df.corr(method='pearson')
     sns.heatmap(corr_mat, annot=True, annot_kws={'fontsize':5})
+    plt.show()
+
+
+def visualize_dataset_relationships(dataset_path, features, target, random_state):
+    # Load Dataset
+    df = pd.read_csv(dataset_path)
+
+    # Split into train/test
+    df_train, df_test = model_selection.train_test_split(df, test_size=0.2, random_state=random_state)
+
+    # Plot relationship of all variables vs. target variable
+    y_loc = int(max(df[target]) * 0.8)
+    num_grids = math.ceil(math.sqrt(len(features)))
+    fig, ax = plt.subplots(nrows=num_grids, ncols=num_grids, figsize=(10, 10))
+    for i in range(len(features)):
+        row = i // num_grids
+        col = i % num_grids
+        ax[row, col].scatter(df_train[features[i]], df_train[target], color='blue', label='train')
+        ax[row, col].scatter(df_test[features[i]], df_test[target], color='red', label='test')
+        ax[row, col].set(xlabel=features[i], ylabel=target)
+
+        p_val = df[features[i]].corr(df[target])
+        l, r = ax[row, col].get_xlim()
+        ax[row, col].text(((r-l)*0.2 + l), y_loc, f'p={round(p_val, 2)}', style='italic')
+    handles, labels = ax[0, num_grids-1].get_legend_handles_labels()
+    fig.legend(handles, labels, loc='upper right')
+    plt.tight_layout()
     plt.show()

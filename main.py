@@ -7,10 +7,16 @@ from models.m5_gpr import *
 
 
 def main():
+    # Define features and target variables for dataset
+    features = ['CRIM', 'ZN', 'INDUS', 'CHAS', 'NOX', 'RM', 'AGE', 'DIS', 'RAD', 'TAX', 'PTRATIO', 'B', 'LSTAT']
+    target = 'MEDV'
+    random_state = 42
+
     # Load and process data
     dataset_path = './dataset/boston_housing_prices.csv'
-    # dataset_statistics(dataset_path=dataset_path)
-    df_train, df_test, features, target = preprocess_data(dataset_path=dataset_path, process='abs_scaling')
+    # dataset_statistics(dataset_path, features, target)
+    # visualize_dataset_relationships(dataset_path, features, target, random_state)
+    df_train, df_test, features, target = preprocess_data(dataset_path, features, target, process='abs_scaling', random_state=random_state)
 
     # Run Models
     results = {}
@@ -23,6 +29,7 @@ def main():
     # Print Results
     df_results = pd.DataFrame(results)
     df_results.index = ['Train_RMSE', 'Train_PctErr', 'Test_RMSE', 'Test_PctErr']
+    df_results = df_results.T
     print(df_results)
 
 
