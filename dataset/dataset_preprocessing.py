@@ -63,7 +63,7 @@ def preprocess_data(dataset_path, features, target, process='abs_scaling', rando
     return df_train, df_test, features, target
 
 
-def dataset_statistics(dataset_path, features, target):
+def dataset_statistics(dataset_path, target):
     # Load Dataset
     df = pd.read_csv(dataset_path)
 

@@ -50,3 +50,23 @@ def plot_pred_vs_actual(df_train, df_test, train_metrics, test_metrics, target, 
     ax.legend(loc='upper right')
     plt.tight_layout()
     plt.show()
+
+
+def plot_feature_importance(features, weights):
+    weights_standardized = weights / abs(weights).sum()
+    colors = {'(+) Correlation': 'blue', '(-) Correlation': 'red'}
+    labels = list(colors.keys())
+    bar_colors = []
+    for w in weights:
+        if w > 0: bar_colors.append('blue')
+        else: bar_colors.append('red')
+
+    fig, ax = plt.subplots(figsize=(5, 7))
+    ax.bar(features, abs(weights_standardized), color=bar_colors)
+    ax.set(xlabel='Variable', ylabel='Relative Model Weights', title='Linear Reg. Feature Importance')
+    handles = [plt.Rectangle((0, 0), 1, 1, color=colors[label]) for label in labels]
+    ax.legend(handles, labels, loc='upper right')
+    plt.draw()
+    ax.set_xticklabels(features, rotation=45, ha='right')
+    plt.tight_layout()
+    plt.show()

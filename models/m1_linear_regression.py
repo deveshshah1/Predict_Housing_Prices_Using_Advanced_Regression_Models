@@ -25,4 +25,7 @@ def run_linear_regression(df_train, df_test, features, target, feature_grouping=
     title = f'Linear Regression [alpha={alpha}, l1_ratio={l1_ratio}] \n Feature Set: {feature_grouping}'
     plot_pred_vs_actual(df_train, df_test, train_metrics, test_metrics, target, title)
 
+    # Plot feature importance
+    plot_feature_importance(features, elastic_net.coef_)
+
     return [train_metrics[0], train_metrics[1], test_metrics[0], test_metrics[1]]
