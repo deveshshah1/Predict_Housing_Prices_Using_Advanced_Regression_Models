@@ -1,13 +1,11 @@
-import pandas as pd
-import numpy as np
-from sklearn import model_selection, preprocessing
-import matplotlib.pyplot as plt
-import seaborn as sns
-import math
+"""
+This file represents the loading, preprocessing, and statistical calculations for the data.
+There are three functions:
+1. preprocess_data: Loads the data, normalizes it, and splits into train/test
+2. dataset_statistics: Prints standard stats about our features and the pearson r correlation matrix
+3. visualize_dataset_relationships: Plots the impact of each feature on our target variable
 
-
-def preprocess_data(dataset_path, features, target, process='abs_scaling', random_state=42):
-    """
+For our dataset in this project, the data is defined as follows:
     Each record in the database describes a Boston suburb or town. The data was drawn from the Boston Standard
     Metropolitan Statistical Area (SMSA) in 1970. The attributes are defined as follows:
 
@@ -28,9 +26,27 @@ def preprocess_data(dataset_path, features, target, process='abs_scaling', rando
 
     Output Feature:
     MEDV: medivan value of owner-occupied homes in $1000s
+"""
+import pandas as pd
+from sklearn import model_selection, preprocessing
+import matplotlib.pyplot as plt
+import seaborn as sns
+import math
 
-    :param dataset_path:
-    :return:
+
+def preprocess_data(dataset_path, features, target, process='abs_scaling', random_state=42):
+    """
+    Loads the dataset as a pandas dataframe. Splits into train/val/test sets. And normalizes/standardizes each
+    feature set based on the desired method.
+
+    :param dataset_path: Absolute path to where dataset excel file is found
+    :param features: List of features we want to use to train the model
+    :param target: String of name of target feature we hope to predict in our model
+    :param process: Type of standardization/preprocessing to perform.
+                    Valid options include {abs_scaling, normalization, standardization}
+    :param random_state: Int representing the random state in the train/test split
+    :return: df_train: pandas dataframe of our features and targets for the training data
+             df_test: pandas dataframe of our features and targets for the test data
     """
     # Load Dataset
     df = pd.read_csv(dataset_path)
@@ -60,10 +76,18 @@ def preprocess_data(dataset_path, features, target, process='abs_scaling', rando
     else:
         raise Exception('Invalid Preprocessing Type')
 
-    return df_train, df_test, features, target
+    return df_train, df_test
 
 
 def dataset_statistics(dataset_path, target):
+    """
+    Calculates and prints basic statistics for our entire dataset. Also prints out the correlation matrix for all
+    variables in the dataset
+
+    :param dataset_path: Absolute path to where dataset excel file is found
+    :param target: String of name of target feature we hope to predict in our model
+    :return: None
+    """
     # Load Dataset
     df = pd.read_csv(dataset_path)
 
@@ -84,6 +108,16 @@ def dataset_statistics(dataset_path, target):
 
 
 def visualize_dataset_relationships(dataset_path, features, target, random_state):
+    """
+    Plots the relationship of every feature variable vs. our target variable. This shows us how big of a linear
+    correlation there is between each feature to our target we hope to predict.
+
+    :param dataset_path: Absolute path to where dataset excel file is found
+    :param features: List of features we want to use to train the model
+    :param target: String of name of target feature we hope to predict in our model
+    :param random_state: Int representing the random state in the train/test split
+    :return: None
+    """
     # Load Dataset
     df = pd.read_csv(dataset_path)
 

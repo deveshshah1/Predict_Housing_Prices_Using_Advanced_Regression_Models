@@ -1,5 +1,13 @@
+"""
+Author: Devesh Shah
+Project: Predict Housing Prices Using Advanced Regression Models
+
+In this project, we explore various advanced regression models on smaller tabular datasets. The project is
+organized such that we hope it can serve as a reference for others building regression models on tabular data.
+We explore ideas from feature selection to visualization of the data to best understand the data.
+"""
 from dataset.dataset_preprocessing import *
-from dataset.feature_extraction import *
+from dataset.feature_extraction import perform_feature_extraction
 from models.m1_linear_regression import *
 from models.m2_svr import *
 from models.m3_random_forest import *
@@ -8,6 +16,12 @@ from models.m5_gpr import *
 
 
 def main():
+    """
+    This is our main function that drives the program. It first defines the standard variables we will hold constant.
+    Then we load the data and preprocess it. This also involves methods such as feature extraction and finding
+    general stats about the data. From here, we use this knowledge to hyper-parameter several simple models.
+    The results are printed out to the user.
+    """
     # Define features and target variables for dataset ------------------------------------------------------------
     features = ['CRIM', 'ZN', 'INDUS', 'CHAS', 'NOX', 'RM', 'AGE', 'DIS', 'RAD', 'TAX', 'PTRATIO', 'B', 'LSTAT']
     target = 'MEDV'
@@ -18,7 +32,7 @@ def main():
     dataset_path = './dataset/boston_housing_prices.csv'
     dataset_statistics(dataset_path, target)
     # visualize_dataset_relationships(dataset_path, features, target, random_state)
-    df_train, df_test, features, target = preprocess_data(dataset_path, features, target, process='abs_scaling', random_state=random_state)
+    df_train, df_test = preprocess_data(dataset_path, features, target, process='abs_scaling', random_state=random_state)
     perform_feature_extraction(df_train, features, target)
 
     # Run Models --------------------------------------------------------------------------------------------------

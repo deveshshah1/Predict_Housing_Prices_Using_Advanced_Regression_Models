@@ -1,9 +1,25 @@
+"""
+Multi-variate Linear Regression Model
+"""
 from sklearn import model_selection, linear_model
 import numpy as np
 from models.model_helper_fxns import *
 
 
 def run_linear_regression(df_train, df_test, features, target, feature_grouping='All Features'):
+    """
+    Implementation of a multivariate linear regression model. Performs extensive hyper-parameter grid search
+    for best model using n-fold cross-validation on training set.
+    Metrics are reported as RMSE and %Error in both table and graph.
+
+    :param df_train: Pandas dataframe of the training data. Includes both features and target variables.
+    :param df_test: Pandas dataframe of the testing data. Includes both features and target variables.
+    :param features: List of strings of the features we want to use to train the model
+    :param target: String of name of target feature we hope to predict in our model
+    :param feature_grouping: String representing name of feature set. Default = 'All Features". Meant
+           to serve as identifier on graphed results as we vary input feature sets
+    :return: List in the following format: [train rmse, train percent error, test rmse, test percent error]
+    """
     # Hyper-parameter Search
     grid = dict()
     grid['alpha'] = [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 0, 0.1, 1.0, 10.0, 100.0]
