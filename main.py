@@ -33,7 +33,7 @@ def main():
     dataset_statistics(dataset_path, target)
     # visualize_dataset_relationships(dataset_path, features, target, random_state)
     df_train, df_test = preprocess_data(dataset_path, features, target, process='abs_scaling', random_state=random_state)
-    perform_feature_extraction(df_train, features, target)
+    # perform_feature_extraction(df_train, features, target)
 
     # Run Models --------------------------------------------------------------------------------------------------
     results = {}

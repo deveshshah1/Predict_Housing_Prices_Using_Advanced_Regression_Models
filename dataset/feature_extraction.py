@@ -6,6 +6,12 @@ Tree Based Feature Selection.
 
 These implementations are all derived from the sklearn site. Refer here for more options:
 https://scikit-learn.org/stable/modules/feature_selection.html
+
+
+Model Feature Importance Methods to consider in the future: [1]
+
+[1] Montavon, Grégoire, Wojciech Samek, and Klaus-Robert Müller. "Methods for interpreting and understanding
+deep neural networks." Digital signal processing 73 (2018): 1-15.
 """
 import pandas as pd
 import numpy as np

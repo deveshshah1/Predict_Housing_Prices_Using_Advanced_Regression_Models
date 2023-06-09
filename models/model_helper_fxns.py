@@ -1,3 +1,20 @@
+"""
+This file represents the various helper functions that were developed to help standardize the way we run
+the different models and train them. We organized them here to keep the code cleaner to read.
+
+The functions included in this document include:
+1. calc_metrics
+2. plot_pred_vs_actual
+3. plot_feature_importance
+
+Models to consider adding in the future: TabNet [2]
+Model Feature Importance Methods to consider in the future: [1]
+
+[1] Montavon, Grégoire, Wojciech Samek, and Klaus-Robert Müller. "Methods for interpreting and understanding
+deep neural networks." Digital signal processing 73 (2018): 1-15.
+[2] Arik, Sercan Ö., and Tomas Pfister. "Tabnet: Attentive interpretable tabular learning."
+Proceedings of the AAAI Conference on Artificial Intelligence. Vol. 35. No. 8. 2021.
+"""
 from sklearn import metrics
 import matplotlib.pyplot as plt
 import xgboost as xgb
@@ -10,6 +27,16 @@ cv_scoring = 'neg_root_mean_squared_error'
 
 
 def calc_metrics(model, df, features, target, use_xgb=False):
+    """
+    This method calculates both the RMSE and %Error of the data in df using the trained model.
+
+    :param model: A trained model that has a valid predict function
+    :param df: A dataframe of the data (train or test) that will be used to calculate the stats
+    :param features: List of strings of the features we want to use to train the model
+    :param target: String of name of target feature we hope to predict in our model
+    :param use_xgb: Boolean variable that indicates if the model is XGBoost (True) or an sklearn derived model (False)
+    :return: A tuple of the RMSE, %Error, and a list of the predicted target values
+    """
     if use_xgb:
         dmatrix = xgb.DMatrix(df[features], df[target])
         predictions = model.predict(dmatrix)
@@ -21,6 +48,21 @@ def calc_metrics(model, df, features, target, use_xgb=False):
 
 
 def plot_pred_vs_actual(df_train, df_test, train_metrics, test_metrics, target, title):
+    """
+    Plots the predicted values of the target (using the trained model) vs. the actual values for both the training
+    and testing data (shown in different colors). Also incudes text on the plot showing the RMSE and %Error.
+    Additionally, we include a histogram in the corner that shows the residuals of all the predictions-actual values.
+
+    :param df_train: Pandas dataframe of the training data. Includes both features and target variables.
+    :param df_test: Pandas dataframe of the testing data. Includes both features and target variables
+    :param train_metrics: Tuple of (RMSE, %Error, List of Predictions) for the training dataset. This is the output
+           from the calc_metrics function when run on the df_train.
+    :param test_metrics: Tuple of (RMSE, %Error, List of Predictions) for the testing dataset. This is the output
+           from the calc_metrics function when run on the df_test.
+    :param target: String of name of target feature we hope to predict in our model
+    :param title: String representing title of graph
+    :return: None
+    """
     # Add data points
     fig, ax = plt.subplots(figsize=(5, 5))
     ax.scatter(df_train[target], train_metrics[2], color='blue', label='train')
@@ -53,7 +95,18 @@ def plot_pred_vs_actual(df_train, df_test, train_metrics, test_metrics, target, 
 
 
 def plot_feature_importance(features, weights):
+    """
+    Plots feature relative importances based on the provided weights from the model. Currently this is only being used
+    for the linear model as it provides weights for each feature.
+
+    :param features: List of strings of the features we want to use to train the model
+    :param weights: List of floats of the model weights of each feature representing importance in the model
+    :return: None
+    """
+    # Make weights all on a relative scale of percentage importance
     weights_standardized = weights / abs(weights).sum()
+
+    # Label (+) correlations as blue and (-) correlations as red
     colors = {'(+) Correlation': 'blue', '(-) Correlation': 'red'}
     labels = list(colors.keys())
     bar_colors = []
@@ -61,6 +114,7 @@ def plot_feature_importance(features, weights):
         if w > 0: bar_colors.append('blue')
         else: bar_colors.append('red')
 
+    # Make plot of data and show plot
     fig, ax = plt.subplots(figsize=(5, 7))
     ax.bar(features, abs(weights_standardized), color=bar_colors)
     ax.set(xlabel='Variable', ylabel='Relative Model Weights', title='Linear Reg. Feature Importance')

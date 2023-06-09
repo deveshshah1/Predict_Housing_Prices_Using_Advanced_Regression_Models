@@ -1,9 +1,25 @@
+"""
+Multi-variate Support Vector Regression (SVR) Model
+"""
 from sklearn import model_selection, svm
 import numpy as np
 from models.model_helper_fxns import *
 
 
 def run_svr(df_train, df_test, features, target, feature_grouping='All Features'):
+    """
+    Implementation of a SVR model. Performs extensive hyper-parameter grid search
+    for best model using n-fold cross-validation on training set.
+    Metrics are reported as RMSE and %Error in both table and graph.
+
+    :param df_train: Pandas dataframe of the training data. Includes both features and target variables.
+    :param df_test: Pandas dataframe of the testing data. Includes both features and target variables.
+    :param features: List of strings of the features we want to use to train the model
+    :param target: String of name of target feature we hope to predict in our model
+    :param feature_grouping: String representing name of feature set. Default = 'All Features". Meant
+           to serve as identifier on graphed results as we vary input feature sets
+    :return: List in the following format: [train rmse, train percent error, test rmse, test percent error]
+    """
     # Hyper-parameter Search
     grid = dict()
     grid['gamma'] = ['scale', 'auto']

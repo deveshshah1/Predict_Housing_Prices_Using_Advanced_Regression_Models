@@ -1,5 +1,5 @@
 """
-Multi-variate Linear Regression Model
+Multi-variate Linear Regression Model using ElasticNet Architecture
 """
 from sklearn import model_selection, linear_model
 import numpy as np
