@@ -27,7 +27,7 @@ def main():
     features = ['CRIM', 'ZN', 'INDUS', 'CHAS', 'NOX', 'RM', 'AGE', 'DIS', 'RAD', 'TAX', 'PTRATIO', 'B', 'LSTAT']
     target = 'MEDV'
     random_state = 42
-    # pd.options.display.max_columns = None  # Turn on/off to see all columns in pandas df for results
+    pd.options.display.max_columns = None  # Turn on/off to see all columns in pandas df for results
 
     # Load and process data ---------------------------------------------------------------------------------------
     dataset_path = './dataset/boston_housing_prices.csv'

@@ -58,7 +58,9 @@ def corr_matrix(df_train, features, print_max_n_corr=5):
 
 def pca(df_train, features, n_components=1, obtain_top_perct=95):
     """
-    Here.
+    Performs Principal Component Analysis and finds the number of components needed to explain the obtain_top_perct
+    amount of variance. These components are both printed out and returned.
+    Variance per component is plotted along with the cumulative variance.
 
     :param df_train: Pandas dataframe of the training data. Includes both features and target variables.
     :param features: List of strings of the features we want to use to train the model

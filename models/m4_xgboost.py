@@ -30,8 +30,8 @@ def run_xgboost(df_train, df_test, features, target, feature_grouping='All Featu
     xgb_model = xgb.train(params=params, dtrain=dtrain_reg, num_boost_round=n_estimators)
 
     # Calculating Metrics (MSE and Percent Error)
-    train_metrics = calc_metrics(xgb_model, df_train, features, target, use_xgb=True)
-    test_metrics = calc_metrics(xgb_model, df_test, features, target, use_xgb=True)
+    train_metrics = calc_metrics(xgb_model, df_train, features, target, type='Xgb')
+    test_metrics = calc_metrics(xgb_model, df_test, features, target, type='Xgb')
 
     # Plot observed vs. predicted cycle life
     title = f'XGBoost [n_estimators={n_estimators}] \n Feature Set: {feature_grouping}'

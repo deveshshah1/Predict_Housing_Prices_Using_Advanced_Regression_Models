@@ -25,7 +25,7 @@ import torch
 cv_folds = 4
 cv_njobs = -1
 cv_scoring = 'neg_root_mean_squared_error'
-device = torch.device("cuda:0" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
 def calc_metrics(model, df, features, target, type='SkLearn', model_input=None):
@@ -38,6 +38,8 @@ def calc_metrics(model, df, features, target, type='SkLearn', model_input=None):
     :param target: String of name of target feature we hope to predict in our model
     :param type: String variable that indicates if the model is XGBoost ("Xgb"), ANN ("ANN"), or an Sklearn model
            ("Sklearn"). This determines the format for running model predictions
+    :param model_input: Only used for ANN predictions and includes torch tensor of input features for model predictions.
+           If not being used, assigned the value None.
     :return: A tuple of the RMSE, %Error, and a list of the predicted target values
     """
     if type == "Xgb":
@@ -51,7 +53,7 @@ def calc_metrics(model, df, features, target, type='SkLearn', model_input=None):
         predictions = model.predict(df[features])
     rmse = metrics.mean_squared_error(y_true=df[target], y_pred=predictions, squared=False)
     percent_error = metrics.mean_absolute_percentage_error(y_true=df[target], y_pred=predictions) * 100
-    return (rmse, percent_error, predictions)
+    return rmse, percent_error, predictions
 
 
 def plot_pred_vs_actual(df_train, df_test, train_metrics, test_metrics, target, title):

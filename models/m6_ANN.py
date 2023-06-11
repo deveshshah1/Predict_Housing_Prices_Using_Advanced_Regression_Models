@@ -68,7 +68,7 @@ def run_ANN(df_train_orig, df_test, features, target, random_state=42, feature_g
     Implementation of an ANN model. Does not perform hyper-parameter search.
     Performs training and evaluation of model using following hyper-parameters:
         Adam optimizer with lr = 0.001 and weight_decay = 0
-        n_epochs = 500
+        n_epochs = 1000
         Standard network architecture defined above.
     Metrics are reported as RMSE and %Error in both table and graph.
 
