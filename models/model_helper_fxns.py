@@ -18,15 +18,17 @@ Proceedings of the AAAI Conference on Artificial Intelligence. Vol. 35. No. 8. 2
 from sklearn import metrics
 import matplotlib.pyplot as plt
 import xgboost as xgb
+import torch
 
 
 # Global Parameters for All Models
 cv_folds = 4
 cv_njobs = -1
 cv_scoring = 'neg_root_mean_squared_error'
+device = torch.device("cuda:0" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 
 
-def calc_metrics(model, df, features, target, use_xgb=False):
+def calc_metrics(model, df, features, target, type='SkLearn', model_input=None):
     """
     This method calculates both the RMSE and %Error of the data in df using the trained model.
 
@@ -34,12 +36,17 @@ def calc_metrics(model, df, features, target, use_xgb=False):
     :param df: A dataframe of the data (train or test) that will be used to calculate the stats
     :param features: List of strings of the features we want to use to train the model
     :param target: String of name of target feature we hope to predict in our model
-    :param use_xgb: Boolean variable that indicates if the model is XGBoost (True) or an sklearn derived model (False)
+    :param type: String variable that indicates if the model is XGBoost ("Xgb"), ANN ("ANN"), or an Sklearn model
+           ("Sklearn"). This determines the format for running model predictions
     :return: A tuple of the RMSE, %Error, and a list of the predicted target values
     """
-    if use_xgb:
+    if type == "Xgb":
         dmatrix = xgb.DMatrix(df[features], df[target])
         predictions = model.predict(dmatrix)
+    elif type == 'ANN':
+        predictions = model(model_input)
+        predictions = predictions.cpu().detach().numpy()
+        predictions = predictions.squeeze()
     else:
         predictions = model.predict(df[features])
     rmse = metrics.mean_squared_error(y_true=df[target], y_pred=predictions, squared=False)

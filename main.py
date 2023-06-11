@@ -13,6 +13,7 @@ from models.m2_svr import *
 from models.m3_random_forest import *
 from models.m4_xgboost import *
 from models.m5_gpr import *
+from models.m6_ANN import *
 
 
 def main():
@@ -26,14 +27,14 @@ def main():
     features = ['CRIM', 'ZN', 'INDUS', 'CHAS', 'NOX', 'RM', 'AGE', 'DIS', 'RAD', 'TAX', 'PTRATIO', 'B', 'LSTAT']
     target = 'MEDV'
     random_state = 42
-    # pd.options.display.max_columns = None
+    # pd.options.display.max_columns = None  # Turn on/off to see all columns in pandas df for results
 
     # Load and process data ---------------------------------------------------------------------------------------
     dataset_path = './dataset/boston_housing_prices.csv'
     dataset_statistics(dataset_path, target)
-    # visualize_dataset_relationships(dataset_path, features, target, random_state)
+    visualize_dataset_relationships(dataset_path, features, target, random_state)
     df_train, df_test = preprocess_data(dataset_path, features, target, process='abs_scaling', random_state=random_state)
-    # perform_feature_extraction(df_train, features, target)
+    perform_feature_extraction(df_train, features, target)
 
     # Run Models --------------------------------------------------------------------------------------------------
     results = {}
@@ -42,6 +43,7 @@ def main():
     results['Random_Forest'] = run_random_forest(df_train, df_test, features, target)
     results['XGBoost'] = run_xgboost(df_train, df_test, features, target)
     results['GPR'] = run_gpr(df_train, df_test, features, target)
+    results['ANN'] = run_ANN(df_train, df_test, features, target, random_state)
 
     # Print Results -----------------------------------------------------------------------------------------------
     df_results = pd.DataFrame(results)
