@@ -8,7 +8,7 @@ The functions included in this document include:
 3. plot_feature_importance
 
 Models to consider adding in the future: TabNet [2]
-Model Feature Importance Methods to consider in the future: [1]
+Model Feature Importance Methods to consider in the future: Deep Taylor Decomposition [1]
 
 [1] Montavon, Grégoire, Wojciech Samek, and Klaus-Robert Müller. "Methods for interpreting and understanding
 deep neural networks." Digital signal processing 73 (2018): 1-15.

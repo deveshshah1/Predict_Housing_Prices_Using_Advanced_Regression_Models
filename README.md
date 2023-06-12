@@ -9,7 +9,15 @@ In general, given more complex problem domains, we can build customized solution
 example, custom GPR Kernels using Gpy are available and can provide major benefits given the right implementation.
 
 
-### Dataset Exploration
+### Table of Contents
+1. Dataset Exploration
+2. Feature Selection
+3. Modeling
+4. Results
+5. Understanding the Git Repo
+6. References
+
+### 1. Dataset Exploration
 
 The first step in any machine learning project is to understand the data we are working with. We begin by first
 investigating the statistics of our dataset to see the types of features we are dealing with and the ranges
@@ -59,16 +67,71 @@ visualized using only our first principal component. And we can obtain 95% of ou
 ![](images/Dataset_Exploration.png)
 
 
-### Feature Selection
+### 2. Feature Selection
 
-Write stuff here.
+We implemented various feature selection methods to get a better understanding of our dataset.
+Looking first at the pearson r correlation matrix in Figure 1B, we see the highest correlations between
+our existing variables exist between RAD-TAX (p=0.91), NOX-DIS (p=-0.77), INDUS-NOX (p=0.77) and 
+AGE-DIS (p=-0.76). Furthermore, from Figure 1C, we can see that with only 8 principal components, 
+we can derive >95% of the variance in the data.
 
-### Results
+We further implement Univariate Feature Selection, Recursive Feature Elimination, and Tree Based
+Feature Selection using Sklearn. In particular we implement Univariate Feature Selection using F Regression,
+R Regression, and Mutual Information. RFE is implemented using an SVR Linear Kernel. Tree Based Feature
+Selection is implemented using an ExtraTreesRegressor. The results are seen in Table 2.
+
+From Table 2 we can see that there is a general concensus that LSTAT, RAD, PRRATIO and TAX are
+the most important features in predicting MEDV. This is something we can keep in mind as we continue to model.
+An interesting controlled experiment would be see the impact of modeling using only these 4 variables as 
+feature inputs. 
+
+![](images/Feature_Selection.png)
 
 
+### 3. Modeling
+
+We implement 6 different models for predicting the MEDV value. Note that our dataset is relatively small
+with only 506 training points (Table 1), each of dimension 13. As a result, we have to limit our model 
+complexity to this domain. Thus, we implement a regularized linear regression model (Elastic Net), 
+Support Vector Regression (SVR), Random Forest, XGBoost, Gaussian Process Regression, and a simplistic
+Artificial Neural Network (ANN). 
+
+For each model architecture except the ANN we perform an extensive hyper-parameter search using
+4-fold cross validation and grid search. The best model is selected using negative RMSE. 
+Metrics are reported in RMSE and %Error for each model. Plots showing the observed vs. predicted
+value are shown for each model.
+
+There are additional model architectures that have shown SOTA results in tabular regression tasks
+such as TabNet. These methods are not implemented here but can be considered for future iterations.
 
 
-### Understanding this Git Repo
+### 4. Results
+
+The results from our models can be seen in the table below. We focus on RMSE as our key metric for assessment
+as the percent error can be biased based on the size of the values in the target variable. 
+
+From this table we see that XGBoost has the best performance on our test set. Note
+our test set was randomly selected as 20% of the entire dataset. The split was held the same for all
+our models.
+
+|                       | **Train RMSE** | **Train %Error** | **Test RMSE** | **Test %Error** |
+|-----------------------|:--------------:|:----------------:|:-------------:|:---------------:|
+| **Linear Regression** |      4.65      |       16.5       |      4.91     |       16.8      |
+| **SVR**               |      2.68      |        7.4       |      3.31     |       9.9      |
+| **Random Forest**     |      1.46      |        4.9       |      3.19     |       10.3      |
+| **XGBoost**           |      0.55      |        2.1       |      2.63     |       9.9       |
+| **GPR**               |      1.64      |        6.2       |      3.28     |       10.8      |
+| **ANN**               |      2.52      |       10.0       |      3.19     |       12.3      |
+
+Figure 2 below shows the predicted vs. observed value for MEDV for each of our trained models.
+This allows us to see the range in which our model was performing better or worse. Note how
+all our models tend to get worse as we get to higher values of MEDV. There must either be limited data
+for learning in this spectrum or we more complex relationships which were not captured by the models.
+
+![](images/Model_Predictions.png)
+
+
+### 5. Understanding this Git Repo
 There are three main parts to the repo.
 1. The main.py file is our centralized function that handles which models we end up running or the order of
 evaluations.
@@ -80,6 +143,6 @@ tuning to plotting conditions can all be found here. Inside this folder we have 
 3. The *dataset* folder is where we store both the dataset as well as the dataset preprocessing functions. In particular
 we handle the dataset preprocessing (scaling, loading) and feature extraction in this area.
 
-### References  
+### 6. References  
 [1] https://www.kaggle.com/datasets/fedesoriano/the-boston-houseprice-data?resource=download  
 [2] https://scikit-learn.org/stable/modules/feature_selection.html
